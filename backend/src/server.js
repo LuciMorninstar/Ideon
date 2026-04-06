@@ -2,6 +2,7 @@ import express from "express"
 import "dotenv/config";
 import { connectDB } from "./utils/connectDB.js";
 import authRoutes from "./routes/auth.route.js"
+import postRoutes from "./routes/post.route.js"
 import { errorMiddleware } from "./middlewares/errror.middleware.js";
 import cookieParser from "cookie-parser"
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/post",postRoutes);
 
 
 app.use(errorMiddleware);
