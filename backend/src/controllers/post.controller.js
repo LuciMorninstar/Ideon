@@ -1,5 +1,5 @@
 import Post from "../models/post.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 export const createPost = async(req,res,next)=>{
     const myId = req.user._id;
@@ -134,6 +134,59 @@ export const updatePost = async(req,res,next)=>{
         
     }
 
+}
+
+export const deletePost = async(req,res,next)=>{
+    const myId = req.user?.id;
+    const {id:postId} = req.params;
+
+    try {
+
+        if(!myId){
+        const err = new Error("Unauthorized Access");
+        err.statusCode = 401;
+        return next(err);
+}
+      
+        const post = await Post.findById({_id:postId});
+        if(!post){
+            const err = new Error("No post to delete");
+            err.statusCode = 400;
+            return next(err);
+        }
+
+        if(post.owner.toString() !== myId.toString()){
+            const err = new Error("UnAuthorized! You are not the owner of the post");
+            err.statusCode = 403;
+            return next(err);
+
+        }
+
+        if(post.images?.length >0){
+           for(const img of post.images){
+            await deleteFromCloudinary(img.public_id);
+           }
+        }
+
+        if(post.video){
+            await deleteFromCloudinary(post.video.public_id);
+        }
+
+        await Post.findByIdAndDelete(postId);
+
+        return res.status(200).json({
+            success:true,
+            message:"Successfully deleted the post"
+        });
+
+     
+
+        
+    } catch (error) {
+        console.log(`Error deleting the post: ${error.message}`);
+        next(error);
+        
+    }
 
 
 }
