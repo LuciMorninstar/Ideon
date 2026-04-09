@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
      
     },
 
+
     role:{
         type:String,
         enum:["user", "admin"],
@@ -41,6 +42,19 @@ const userSchema = new mongoose.Schema({
             ref:"Post"
         }
     ],
+
+    friends:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User"
+        }
+    ],
+    groups:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Group"
+        }
+    ]
 
 
 },{timestamps:true})
