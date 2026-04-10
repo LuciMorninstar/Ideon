@@ -1,4 +1,4 @@
-import User from "../models/user.model";
+import User from "../models/user.model.js";
 
 export const addAsFriend = async(req,res,next)=>{
     const myId = req.user?.id;
@@ -72,7 +72,7 @@ export const unfriend = async(req,res,next)=>{
             err.statusCode = 401;
             return next(err);
         }
-        
+
         if(!userToUnfriend){
             const err = new Error("No user to unfriend");
             err.statusCode = 400;
@@ -109,3 +109,52 @@ export const unfriend = async(req,res,next)=>{
         
     }
 }
+
+
+export const getAllMyFriends = async(req,res,next)=>{
+
+    const myId = req.user?.id;
+
+    try {
+        if(!myId){
+            const err = new Error("UnAuthorized Access!");
+            err.statusCode = 401;
+            return next(err);
+        }
+
+        const user = await User.findById(myId).select("friends").populate("friends", "name profilePic")
+        
+        if(!user){
+            const err = new Error("No user found!");
+            err.statusCode = 400;
+            return next(err);
+        }
+       
+        const allMyFriends = user.friends;
+                      
+        if(!allMyFriends.length ){
+            return res.status(200).status({
+                success:true,
+                message:"No friends in contact"
+            })
+        }
+
+        return res.status(200).json({
+            success:true,
+            message:"Successfully fetched the friends",
+            friends:allMyFriends
+        })
+
+        
+
+
+        
+    } catch (error) {
+        console.log(`Error in the getAllMyFriends controller : ${error.message}`);
+        next(error);
+        
+    }
+
+}
+
+//todo: do the routes for the user and also add the group controller send messages and all.
