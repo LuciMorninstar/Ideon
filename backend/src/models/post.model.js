@@ -29,18 +29,20 @@ const postSchema = new mongoose.Schema({
         public_id:{type:String, default:null}
     },
 
-    reactions:[
-        {
-            user:{
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"User"
-            },
-            type:{
-                type:String,
-                enum:["like", "dislike"]
-            }
-        }
-    ],
+     reactions:[
+   
+           {
+              user: {
+                   type:mongoose.Schema.Types.ObjectId,
+                   ref:"User"
+               },
+               reactionType:{
+                   type:String,
+                   enum:["like","haha","cry","love","sad"],
+               
+           }
+       }
+       ],
 
    
     
