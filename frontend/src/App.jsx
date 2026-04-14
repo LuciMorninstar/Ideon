@@ -1,8 +1,25 @@
 import React from 'react'
+import {BrowserRouter as Router, Routes, Route} from "react-router"
+import MainLayout from './layouts/MainLayout'
+import HomePage from './pages/HomePage'
 
 const App = () => {
   return (
-    <div className = "bg-red-500">App</div>
+
+    <Router>
+
+      <Routes>
+        <Route path = "/" element = {<MainLayout/>}>
+
+        <Route index element = {<HomePage/>}/>
+
+
+        </Route>
+
+      </Routes>
+
+    </Router>
+    
   )
 }
 

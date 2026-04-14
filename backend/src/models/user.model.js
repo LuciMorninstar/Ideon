@@ -54,6 +54,13 @@ const userSchema = new mongoose.Schema({
             type:mongoose.Schema.Types.ObjectId,
             ref:"Group"
         }
+    ],
+    //for post bookmarks
+    bookmarks:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Post"
+        }
     ]
 
 

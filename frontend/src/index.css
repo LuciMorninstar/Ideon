@@ -1,1 +1,60 @@
+
+
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Italianno&family=Libertinus+Sans:ital,wght@0,400;0,700;1,400&family=Metrophobic&family=Neonderthaw&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
 @import "tailwindcss";
+
+
+
+body{
+    background-color: #0C0F13;
+    font-family:"Metrophobic", sans-serif;
+    font-weight:400;
+    font-style:normal;
+    color:#F3F3F4
+}
+
+
+  /* Slides in hero section */
+  .heroSwiper{
+    @apply w-full bg-red-500 h-[400px] sm:h-[450px] md:h-[500px] lg:h-[200px] 
+  }
+
+  .heroSwiperSlide{
+    @apply   w-[200px]  
+  }
+
+
+
+@layer base{
+
+    h1{
+        @apply text-5xl font-bold text-white
+    }
+    
+
+}
+
+@theme{
+
+    --color-primary-background:#0C0F13;
+
+    --color-sidebar-hover:#181818;
+
+
+
+
+    --color-font-primary-color:#F3F3F4;    /* for the biggest text*/
+    --color-font-secondary-color:#CAC8C4;
+    --color-font-tertiary-color:#DEDEE0;
+
+
+}
+
+@layer utilities{
+
+    .smallest-text-style{
+        @apply text-xs 
+    }
+
+}

@@ -5,13 +5,59 @@ const postSchema = new mongoose.Schema({
 
     owner:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
+        ref:"User",
+        required:true
     },
 
     date:{
         type:Date,
         default:Date.now
     },
+
+    //updated by system not user
+    type:{
+        type:String,
+        enum:["text","image","video","link","reels","story"]
+    },
+
+    category: {
+    type: String,
+    enum: [ "tech","education","entertainment","sports","gaming",
+        "business","finance","lifestyle","health","fitness",
+        "travel","food","fashion","news","politics",
+        "science","motivation","art","music","movies",
+        "photography","memes","relationships","self-development","other"
+    ],
+    default: "other"
+    },
+
+    tags:[
+        {
+            type:String,
+            lowercase:true,
+            trim:true
+
+        }
+    ],
+
+    clickCount:{
+        type:Number,
+        default:0
+    },
+
+    visibility:{
+        type:String,
+        enum:["public","private","friends"],
+        default:"public"
+    },
+
+    taggedFriends:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User"
+        }
+    ],
+
 
     text:{
         type:String,
