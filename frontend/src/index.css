@@ -15,31 +15,46 @@ body{
 }
 
 
-  /* Slides in hero section */
-  .heroSwiper{
-    @apply w-full bg-red-500 h-[400px] sm:h-[450px] md:h-[500px] lg:h-[200px] 
-  }
-
-  .heroSwiperSlide{
-    @apply   w-[200px]  
-  }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
 
 
 
 @layer base{
 
     h1{
-        @apply text-5xl font-bold text-white
+        @apply text-5xl lg:text-4xl sm:text-3xl font-bold text-font-primary-color
     }
-    
+    h2{
+      @apply text-4xl lg:text-3xl sm:text-2xl font-bold text-font-primary-color  
+    }
+    h3{
+        @apply text-3xl lg:text-2xl sm:text-xl font-bold text-font-primary-color
+    }
+    h4{
+        @apply text-2xl lg:text-xl sm:text-lg font-bold text-font-primary-color
+    }
+    h5{
+        @apply text-sm sm:text-base lg:text-base font-semibold text-font-primary-color
+    }s
+    h6{
+        @apply text-lg sm:text-base font-bold text-font-primary-color
+    }
+
+
 
 }
 
 @theme{
 
     --color-primary-background:#0C0F13;
+    --color-secondary-background:#161920;
 
     --color-sidebar-hover:#181818;
+
+
+    --color-border-color:#2F3336;
 
 
 
@@ -47,6 +62,7 @@ body{
     --color-font-primary-color:#F3F3F4;    /* for the biggest text*/
     --color-font-secondary-color:#CAC8C4;
     --color-font-tertiary-color:#DEDEE0;
+    --color-font-quaternary-color:#71767B;
 
 
 }
@@ -55,6 +71,10 @@ body{
 
     .smallest-text-style{
         @apply text-xs 
+    }
+
+    .cardWrapper{
+        @apply  w-full h-full flex flex-row gap-2 overflow-x-auto 
     }
 
 }
