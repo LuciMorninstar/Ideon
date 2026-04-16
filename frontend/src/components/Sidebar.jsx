@@ -74,7 +74,7 @@ const Sidebar = () => {
 
 
   return (
-    <aside className = " min-h-screen border-r border-r-gray-700 ">
+    <aside className = " min-h-screen border-r border-r-border-color ">
 
         <div className = "flex flex-col justify-between  h-screen py-2 px-2  max-md:items-center   "> 
 
@@ -82,14 +82,14 @@ const Sidebar = () => {
             <img src={logo} alt="logo" className = "w-full h-full bg-cover object-center object-cover"/>
           </div>
 
-        <div className = " flex flex-col gap-2">
+        <div className = " flex flex-col sm:gap-0 lg:gap-2">
       
         {
           sidebarItems.map((item,i)=>(
 
             <Link to ={item.link} className='flex  flex-row gap-4 px-3 py-3 rounded-full items-center justify-start hover:bg-sidebar-hover active:bg-sidbar-hover w-max transition-all ease-in-out duration-100 cursor-pointer '>
-              <span className=' text-3xl text-font-primary-color'>{item.icon}</span>
-              <span className = "text-xl text-font-primary-color max-md:hidden transition-all ease-in-out duration-300">{item.name}</span>
+              <span className=' sm:text-2xl xl:text-3xl text-font-primary-color'>{item.icon}</span>
+              <span className = " text-lg xl:text-xl text-font-primary-color max-md:hidden transition-all ease-in-out duration-300">{item.name}</span>
             </Link>
           
           ))
