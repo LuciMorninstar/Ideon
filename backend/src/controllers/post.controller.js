@@ -1,4 +1,5 @@
 import Post from "../models/post.model.js";
+import User from "../models/user.model.js";
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 
 export const createPost = async(req,res,next)=>{
@@ -190,4 +191,125 @@ export const deletePost = async(req,res,next)=>{
 
 
 }
+
+export const ToggleBookmarks = async(req,res,next)=>{
+    const myId = req.user._id;
+    const {postId} = req.params;
+
+    try {
+        if(!myId){
+            const err = new Error("UnAuthorized Access");
+            err.statusCode = 401;
+            return next(err);
+        }
+
+        const user = await User.findById(myId);
+
+        const isBookmarked = user.bookmarks.includes(postId);
+
+        const updatedUser = await User.findByIdAndUpdate(myId,
+            isBookmarked ? {$pull : {bookmarks:postId}}
+            : {$addToSet : {bookmarks:postId}},
+            {new:true}
+        )
+
+        return res.status(200).json({
+            success:true,
+            message:isBookmarked ? "Removed From Bookmarks" : "Added to Bookmarks",
+            bookmarks:updatedUser.bookmarks,
+            isBookmarked:!isBookmarked
+
+        })
+        
+    } catch (error) {
+        console.log(`Error in the addToBookmarks controller : ${error.message}`);
+        next(error);
+        
+    }   
+    
+}
+
+export const increaseClickCount = async(req,res,next)=>{
+    const {id:postId} = req.params;
+    const myId = req.user?._id;
+
+    try {
+        if(!myId){
+            const err = new Error("UnAuthorized Access!");
+            err.statusCode = 401;
+            return next(err);
+        }
+
+        const post = await Post.findByIdAndUpdate(postId,
+            {$inc:{clickCount:1}},
+            {new:true}
+        );
+
+        if(!post){
+            const err = new Error("No post found");
+            err.statusCode = 404;
+            return next(err);
+        }
+
+
+        return res.status(200).json({
+            success:true,
+            message:"Increased clickCount of post",
+            postClickCount:post.clickCount
+
+        })
+
+
+        
+    } catch (error) {
+        console.log(`Error in the increaseClickCount controller : ${error.message}`);
+        next(error);
+
+        
+    }
+
+
+}
+
+export const addToSavedPosts = async(req,res,next)=>{
+    const {id:postId} = req.params;
+    const myId = req.user?._id;
+
+    try {
+        if(!myId){
+            const err = new Error("UnAuthorized Access!");
+            err.statusCode = 401;
+            return next(err);
+        }
+        if(!postId){
+            const err = new Error("Post id is required!");
+            err.statusCode = 400;
+            return next(err);
+        }
+
+    const savedPost = await savedPosts.create({
+        user:myId,
+        post:postId
+        })
+
+        return res.status(201).json({
+            succcess:true,
+            message:"Successfully saved the post",
+            savedPost
+        })
+        
+    } catch (error) {
+        if(error.code === 11000){
+            return res.status(400).json({
+                message:"Post already saved"
+            })
+        }// here this is catching the duplicate key error since in post model we uses the index to prevent duplicates.. and because of index ( we also doin't need to check if post already exists since it already creates uniqueness in mongodb )
+        console.log(`Error in the addToSavedPosts controller :${error.message}`);
+        next(error);
+        
+    }
+}
+
+
+
 
