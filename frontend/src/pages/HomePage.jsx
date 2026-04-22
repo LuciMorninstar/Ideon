@@ -1,9 +1,11 @@
 import React from 'react'
 import StorySection from '../components/StorySection'
 import { useState } from 'react';
-import Options from '../components/Options';
+
 
 import PostSection from '../components/PostSection';
+import CreatePost from '../components/CreatePost';
+import Navbar from "../components/Navbar";
 
 
 const HomePage = () => {
@@ -13,10 +15,13 @@ const HomePage = () => {
 
   return ( 
     <>
-   
+
+
+   <Navbar/>
     <StorySection/>
     {/* <Options setForYou={setForYou} setVideos={setVideos} /> */}
-    <PostSection/>
+    <CreatePost/>
+    <PostSection/>s
      </>
   )
 }
