@@ -4,6 +4,7 @@ import { connectDB } from "./utils/connectDB.js";
 import authRoutes from "./routes/auth.route.js"
 import postRoutes from "./routes/post.route.js"
 import userRoutes from "./routes/user.route.js"
+import savedPostsRoutes from "./routes/savedPosts.route.js"
 import messageRoutes from "./routes/message.route.js"
 import { errorMiddleware } from "./middlewares/errror.middleware.js";
 import cookieParser from "cookie-parser"
@@ -23,6 +24,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/post",postRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/message",messageRoutes);
+app.use("/api/savedPosts",savedPostsRoutes )
 
 
 app.use(errorMiddleware);

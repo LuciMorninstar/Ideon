@@ -271,44 +271,7 @@ export const increaseClickCount = async(req,res,next)=>{
 
 }
 
-export const addToSavedPosts = async(req,res,next)=>{
-    const {id:postId} = req.params;
-    const myId = req.user?._id;
 
-    try {
-        if(!myId){
-            const err = new Error("UnAuthorized Access!");
-            err.statusCode = 401;
-            return next(err);
-        }
-        if(!postId){
-            const err = new Error("Post id is required!");
-            err.statusCode = 400;
-            return next(err);
-        }
-
-    const savedPost = await savedPosts.create({
-        user:myId,
-        post:postId
-        })
-
-        return res.status(201).json({
-            succcess:true,
-            message:"Successfully saved the post",
-            savedPost
-        })
-        
-    } catch (error) {
-        if(error.code === 11000){
-            return res.status(400).json({
-                message:"Post already saved"
-            })
-        }// here this is catching the duplicate key error since in post model we uses the index to prevent duplicates.. and because of index ( we also doin't need to check if post already exists since it already creates uniqueness in mongodb )
-        console.log(`Error in the addToSavedPosts controller :${error.message}`);
-        next(error);
-        
-    }
-}
 
 
 
