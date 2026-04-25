@@ -192,9 +192,9 @@ export const deletePost = async(req,res,next)=>{
 
 }
 
-export const ToggleBookmarks = async(req,res,next)=>{
+export const toggleBookmarks = async(req,res,next)=>{
     const myId = req.user._id;
-    const {postId} = req.params;
+    const {id:postId} = req.params;
 
     try {
         if(!myId){
@@ -269,6 +269,59 @@ export const increaseClickCount = async(req,res,next)=>{
     }
 
 
+}
+
+export const reactToPost = async(req,res,next)=>{
+    const {id:postId} = req.params;
+    const {reactionType} = req.body;
+    const myId = req.user?._id;
+    const validReactions = ["like", "haha", "cry", "love", "sad"];
+
+    try {
+
+        if(!validReactions.includes(reactionType)){
+            return res.status(400).json({
+                success:false,
+                message:"Invalid Reaction Type"
+            })
+        }
+        // This is incase of any other enum reaction values let's say likey
+
+        if(!myId){
+            const err = new Error("UnAuthorized Access!");
+            err.statusCode = 401;
+            return next(err);
+        }
+
+        const post = await Post.findById(postId);
+
+        const existingUserReaction = post.reactions.find((r)=>r.user.toString() === myId.toString());
+
+        if(!existingUserReaction){
+            post.reactions.push({user:myId, reactionType:reactionType})
+        }
+        else if(existingUserReaction.reactionType === reactionType){
+           post.reactions = post.reactions.filter((r)=>r.user.toString() !== myId.toString())
+        }
+        else{
+            existingUserReaction.reactionType = reactionType;
+        }
+
+        await post.save();
+
+        return res.status(200).json({
+            success:true,
+            message:"Reaction",
+            reactions:post.reactions
+        })
+
+        
+    } catch (error) {
+        console.log(`Error in the reactToPost controller :${error.message}`);
+        next(error);
+        
+    }
+    
 }
 
 
