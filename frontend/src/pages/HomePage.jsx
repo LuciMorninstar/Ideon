@@ -10,14 +10,13 @@ import Navbar from "../components/Navbar";
 
 const HomePage = () => {
 
-  const [foryou, setForYou] = useState(false);
-  const [videos, setVideos] = useState(false);  
+ 
 
   return ( 
     <>
 
 
-   <Navbar/>
+   {/* <Navbar/> */}
     <StorySection/>
     {/* <Options setForYou={setForYou} setVideos={setVideos} /> */}
     <CreatePost/>

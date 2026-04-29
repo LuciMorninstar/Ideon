@@ -38,9 +38,9 @@ body{
     }
     h5{
         @apply text-sm sm:text-base lg:text-base font-semibold text-font-primary-color
-    }s
+    }
     h6{
-        @apply text-lg sm:text-base font-bold text-font-primary-color
+        @apply text-lg sm:text-sm font-bold text-font-primary-color
     }
 
 

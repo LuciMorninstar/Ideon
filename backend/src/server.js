@@ -24,7 +24,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/post",postRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/message",messageRoutes);
-app.use("/api/savedPosts",savedPostsRoutes )
+app.use("/api/savedPosts",savedPostsRoutes );
 
 
 app.use(errorMiddleware);
