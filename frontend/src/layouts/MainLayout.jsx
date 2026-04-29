@@ -2,7 +2,7 @@ import React from 'react'
 import { Outlet } from 'react-router'
 import Sidebar from '../components/Sidebar'
 
-import Message from '../components/Message'
+import Friends from '../components/Friends'
 
 
 const MainLayout = () => {
@@ -17,7 +17,7 @@ const MainLayout = () => {
             <Outlet/>
         </div>
         <section className = "sticky top-0 hidden lg:block">
-        <Message />
+        <Friends/>
         </section>
     </main>
   )

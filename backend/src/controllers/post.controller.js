@@ -316,13 +316,42 @@ export const reactToPost = async(req,res,next)=>{
         })
 
         
-    } catch (error) {
+    } catch (error) {s
         console.log(`Error in the reactToPost controller :${error.message}`);
         next(error);
         
     }
     
 }
+
+
+export const getAllPosts = async(req,res,next)=>{
+
+    try {
+        const posts = await Post.find();
+
+        if(!posts || posts.length === 0){
+            const err = new Error ("No posts found");
+            err.statusCode = 404;
+            return next(err);
+        }
+
+        return res.status(200).json({
+            success:true,
+            message:"Successfully fetched all posts",
+            posts
+        })
+        
+        
+    } catch (error) {
+        console.log(`Error in the getAllPosts controller : ${error.message}`);
+        next(error);
+        
+    }
+}
+
+
+
 
 
 
