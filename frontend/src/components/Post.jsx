@@ -1,14 +1,16 @@
 import React from 'react'
 import PostActions from './PostActions'
 import PostSkeleton from './skeletons/PostSkeleton';
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 const Post = ({post}) => {
 
   
 
-  return (
-
-    
+return (
 
         // wrapper
                 <div className ="flex flex-col gap-2 px-2 py-1 lg:px-4 lg:py-2 border-b border-border-color">
@@ -21,7 +23,7 @@ const Post = ({post}) => {
                         {/* name and date */}
                         <div className="flex flex-col gap-0" >
                             <h5>{post.name}</h5>
-                            <span className='text-xs text-font-quaternary-color font-semibold'>{post.date}</span>
+                            <span className='text-xs text-font-quaternary-color font-semibold'>{dayjs(post.date).fromNow()}</span>
                         
                         </div>
                    
