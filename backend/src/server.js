@@ -8,12 +8,16 @@ import savedPostsRoutes from "./routes/savedPosts.route.js"
 import messageRoutes from "./routes/message.route.js"
 import { errorMiddleware } from "./middlewares/errror.middleware.js";
 import cookieParser from "cookie-parser"
+import cors from "cors"
 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-
+app.use(cors({
+    origin:["http://localhost:5173", "http://ideon.onrender.com"],
+    credentials:true
+}))
 
 
 app.use(express.json());

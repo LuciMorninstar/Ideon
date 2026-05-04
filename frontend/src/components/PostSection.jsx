@@ -7,54 +7,60 @@ import city from "../assets/city.jpg"
 import Post from './Post'
 
 import PostSkeleton from './skeletons/PostSkeleton'
+import { useGetAllPosts } from '../hooks/usePost.js'
+
 
 
 const PostSection = () => {
 
-    const posts = [
-        {
-            name:"Stars Winner",
-            date:"42min",
-            profilePic:profilePic,
-            details:"Amazing ! 😲 PM Balen Shah has been included in Time Magazine’s “100 Most Influential People of 2026,” alongside global leaders and policymakers, marking a major international recognition. PM Balen is the one who won the hearts of Nepalese People. In spite of being a rapper and a ex engineer he rivaled the ex prime minister Kp sharmal oli to get to this position that he is in now ",
+    const {isPending,isError, data:posts, error} = useGetAllPosts();
+    console.log(posts);
+    // console.log(data);
 
-            image:city
+
+    // const posts = [
+    //     {
+    //         name:"Stars Winner",
+    //         date:"42min",
+    //         profilePic:profilePic,
+    //         details:"Amazing ! 😲 PM Balen Shah has been included in Time Magazine’s “100 Most Influential People of 2026,” alongside global leaders and policymakers, marking a major international recognition. PM Balen is the one who won the hearts of Nepalese People. In spite of being a rapper and a ex engineer he rivaled the ex prime minister Kp sharmal oli to get to this position that he is in now ",
+
+    //         image:city
         
-        },
-        {
-            name:"Kibutsuzi Muzan",
-            date:"1hr",
-            profilePic:japan,
-            details:"Amazing ! 😲 PM Balen Shah has been included in Time Magazine’s “100 Most Influential People of 2026,” alongside global leaders and policymakers, marking a major international recognition. PM Balen is the one who won the hearts of Nepalese People. In spite of being a rapper and a ex engineer he rivaled the ex prime minister Kp sharmal oli to get to this position that he is in now ",
+    //     },
+    //     {
+    //         name:"Kibutsuzi Muzan",
+    //         date:"1hr",
+    //         profilePic:japan,
+    //         details:"Amazing ! 😲 PM Balen Shah has been included in Time Magazine’s “100 Most Influential People of 2026,” alongside global leaders and policymakers, marking a major international recognition. PM Balen is the one who won the hearts of Nepalese People. In spite of being a rapper and a ex engineer he rivaled the ex prime minister Kp sharmal oli to get to this position that he is in now ",
 
-            image:japan
+    //         image:japan
         
-        },
-        {
-            name:"Bloodhounds",
-            date:"2min",
-            profilePic:moon,
-            details:"Amazing ! 😲 PM Balen Shah has been included in Time Magazine’s “100 Most Influential People of 2026,” alongside global leaders and policymakers, marking a major international recognition. PM Balen is the one who won the hearts of Nepalese People. In spite of being a rapper and a ex engineer he rivaled the ex prime minister Kp sharmal oli to get to this position that he is in now ",
+    //     },
+    //     {
+    //         name:"Bloodhounds",
+    //         date:"2min",
+    //         profilePic:moon,
+    //         details:"Amazing ! 😲 PM Balen Shah has been included in Time Magazine’s “100 Most Influential People of 2026,” alongside global leaders and policymakers, marking a major international recognition. PM Balen is the one who won the hearts of Nepalese People. In spite of being a rapper and a ex engineer he rivaled the ex prime minister Kp sharmal oli to get to this position that he is in now ",
 
-            image:moon
+    //         image:moon
         
-        },
-        {
-            name:"Rey Mysterio",
-            date:"5min",
-            profilePic:city,
-            details:"Amazing ! 😲 PM Balen Shah has been included in Time Magazine’s “100 Most Influential People of 2026,” alongside global leaders and policymakers, marking a major international recognition. PM Balen is the one who won the hearts of Nepalese People. In spite of being a rapper and a ex engineer he rivaled the ex prime minister Kp sharmal oli to get to this position that he is in now ",
+    //     },
+    //     {
+    //         name:"Rey Mysterio",
+    //         date:"5min",
+    //         profilePic:city,
+    //         details:"Amazing ! 😲 PM Balen Shah has been included in Time Magazine’s “100 Most Influential People of 2026,” alongside global leaders and policymakers, marking a major international recognition. PM Balen is the one who won the hearts of Nepalese People. In spite of being a rapper and a ex engineer he rivaled the ex prime minister Kp sharmal oli to get to this position that he is in now ",
 
-            image:city
+    //         image:city
         
-        },
-    ]
+    //     },
+    // ]
 
 
-      const loading = false;
+    if(isPending) return <PostSkeleton/>
 
-
-    if(loading) return <PostSkeleton/>
+    if(isError) return (<div> Something Error happened</div>)
 
   return (
 
@@ -62,7 +68,7 @@ const PostSection = () => {
     <section className='flex flex-col w-full gap-0'>
 
         {
-            posts.map((post,i)=>(
+            (posts || []).map((post,i)=>(
                 <>
             <Post post = {post}/>
           

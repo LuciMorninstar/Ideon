@@ -4,10 +4,8 @@ import CreatePostPopup from './CreatePostPopup';
 import ProfilePic from './ProfilePic';
 
 
-const CreatePost = () => {
+const CreatePost = ({setOpenCreatePostPopup, openCreatePostPopup}) => {
 
-  const [openCreatePostPopup, setOpenCreatePostPopup] = useState(false);
-  console.log(openCreatePostPopup);
 
 
   return (
@@ -28,8 +26,11 @@ const CreatePost = () => {
           
         </div>
     </section>
-
+    
+    {
+      openCreatePostPopup &&
     <CreatePostPopup setOpenCreatePostPopup={setOpenCreatePostPopup}/>
+    }
 
 
     </>

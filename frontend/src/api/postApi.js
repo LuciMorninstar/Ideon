@@ -1,0 +1,12 @@
+import {axiosInstance as axios} from "../utils/axios.js";
+export const getAllPosts = async()=>{
+    const response = await axios.get("/post");
+    return response.data.posts;
+
+}
+
+export const createPost = async(formData)=>{
+    const response = await axios.post("/post", formData);
+    return response.data.post;
+
+}
