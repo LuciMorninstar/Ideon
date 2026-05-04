@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage'
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools"
 import {Toaster} from "react-hot-toast"
+import SignUpPage from './pages/SignUpPage'
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -21,8 +22,8 @@ const App = () => {
 
         <Route index element = {<HomePage/>}/>
 
-
         </Route>
+        <Route path="/signup" element = {<SignUpPage/>}/>
 
       </Routes>
 
