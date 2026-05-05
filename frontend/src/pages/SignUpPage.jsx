@@ -5,10 +5,14 @@ import { Link } from "react-router";
 import ProfilePic from "../components/ProfilePic";
 import { useSignUp } from "../hooks/useAuth";
 import { Loader } from 'lucide-react';
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 
 
 const SignUpPage = () => {
+
+    const navigate = useNavigate();
 
   const {mutate:signUpMutation, isPending, isSuccess, isError} = useSignUp();
 
@@ -36,14 +40,21 @@ const SignUpPage = () => {
     sendFormData.append("profilePic", formData.profilePic);
   }
 
-  signUpMutation(formData,{
-    onSuccess:()=>{
-      setFormData({name:"", email:"", password:""});
-    },
-    onError:(err)=>{
-      console.log(err);
-    }
-  })
+
+
+
+    signUpMutation(sendFormData,{
+      onSuccess:()=>{
+        setFormData({name:"", email:"", password:""});
+        toast.success("Account created successfully");
+        navigate("/signin")
+      },
+
+      onError:(err)=>{
+        console.log(err);
+        toast.error(err?.response?.data?.message || "Something went wrong");
+      }
+    })
 
 
   };
@@ -86,6 +97,7 @@ const SignUpPage = () => {
               type="file"
               className="hidden"
               name="profilePic"
+              // value={formData.profilePic}
               onChange = {(e)=>setFormData({...formData,profilePic:e.target.files[0]})}
             />
             {
@@ -119,6 +131,7 @@ const SignUpPage = () => {
               type="text"
               name="name"
               placeholder="Type your name"
+              value={formData.name}
               onChange={(e)=>setFormData({...formData, name:e.target.value})}
             />
 
@@ -130,6 +143,7 @@ const SignUpPage = () => {
               type="email"
               name="email"
               placeholder="Type your Email"
+              value={formData.email}
               onChange={(e)=>setFormData({...formData, email:e.target.value})}
             />
             </div>
@@ -140,6 +154,7 @@ const SignUpPage = () => {
               className="form_input_style"
               type="password"
               name="password"
+              value={formData.password}
               placeholder="Create a password"
               onChange={(e)=>setFormData({...formData, password:e.target.value})}
             />

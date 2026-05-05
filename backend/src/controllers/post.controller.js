@@ -27,8 +27,8 @@ export const createPost = async(req,res,next)=>{
 
         let videoUrl = null;
 
-        if(req.files?.video){
-            const uploadVideo = await uploadOnCloudinary(req.files.video.path);
+        if(req.files?.video?.[0]){
+            const uploadVideo = await uploadOnCloudinary(req.files.video[0].path);
             
             videoUrl = {
                 url:uploadVideo.url,
@@ -328,7 +328,7 @@ export const reactToPost = async(req,res,next)=>{
 export const getAllPosts = async(req,res,next)=>{
 
     try {
-        const posts = await Post.find();
+        const posts = await Post.find().populate("owner","name profilePic" );
 
         if(!posts || posts.length === 0){
             const err = new Error ("No posts found");

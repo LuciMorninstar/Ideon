@@ -6,7 +6,7 @@ import upload from "../middlewares/multer.middleware.js";
 const router = express.Router();
 
 router.get("/", getAllPosts);
-router.post("/", upload.fields([{name:"images", maxCount:8},{name:"video", maxCount:1}]), createPost);
+router.post("/", protectRoute, upload.fields([{name:"images", maxCount:8},{name:"video", maxCount:1}]), createPost);
 router.delete("/:id", protectRoute, deletePost);
 router.patch("/:id",protectRoute,updatePost);
 router.patch("/incClickCount/:id", protectRoute, increaseClickCount );
