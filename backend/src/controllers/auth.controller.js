@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { redis } from "../utils/redis.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign(
@@ -42,14 +43,28 @@ const storeTokensInCookie = (res, accessToken, refreshToken) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 };
+
 export const signUp = async (req, res, next) => {
   const { name, email, password } = req.body;
+// const profilPic = req.files ? req.files.pathP :null;
+  console.log(name, email, password);
 
   try {
     if (!name || !email || !password) {
       const err = new Error("All fields are required");
       err.statusCode = 400;
       return next(err);
+    }
+    
+    let imageUrl;
+
+    if(req.file){
+      const uploadImage = await uploadOnCloudinary(req.file.path);
+      imageUrl={
+        url:uploadImage.secure_url,
+        public_id:uploadImage.public_id
+
+      }
     }
 
     const existingUser = await User.findOne({ email: email });
@@ -64,6 +79,7 @@ export const signUp = async (req, res, next) => {
       name,
       email,
       password,
+      profilePic:imageUrl
     });
 
     newUser.password = undefined;
@@ -126,7 +142,7 @@ export const signIn = async (req, res, next) => {
     });
   } catch (error) {
     console.log(`Error in the signIn controller ${error.message}`);
-    return next(err);
+     next(err);
   }
 };
 
@@ -164,3 +180,32 @@ export const signOut = async (req, res, next) => {
     return next(error);
   }
 };
+
+
+export const getCurrentUser = async(req,res,next)=>{
+  const myId = req.user?._id;
+  
+  try {
+    if(!myId){
+      const err = new Error("UnAuthorized Access");
+      err.statusCode = 401;
+      return next(err);
+    }
+
+    const user = await User.findById(myId).select("-password");
+    if(!user){
+      const err = new Error("No user found");
+      err.statusCode = 404;
+      return next(err);
+    }
+
+    return res.status(200).json({
+      success:true,
+      user:user
+    })
+    
+  } catch (error) {
+    console.log(`Error in the getCurrentUser Controller: ${error.message}`);
+    next(error);
+  }
+}

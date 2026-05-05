@@ -2,9 +2,13 @@ import React, { useState } from 'react'
 
 import CreatePostPopup from './CreatePostPopup';
 import ProfilePic from './ProfilePic';
+import { useAuthStore } from '../stores/useAuthStore';
 
 
 const CreatePost = ({setOpenCreatePostPopup, openCreatePostPopup}) => {
+
+
+  const user = useAuthStore((state)=>state.user);
 
 
 

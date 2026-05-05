@@ -9,17 +9,15 @@ import { IoSettingsOutline } from "react-icons/io5";
 import logo from "../assets/logo.png"
 import profilePic from "../assets/profilePic.png"
 import { Link } from 'react-router';
-
-
-
-
-
-
-
+import { useAuthStore } from "../stores/useAuthStore.js"
 
 
 
 const Sidebar = () => {
+
+  const user = useAuthStore((state)=>state.user);
+  console.log("sidebar user", user);
+  // console.log("FULL STORE:", useAuthStore.getState());
 
   const sidebarItems = [
     {
@@ -101,13 +99,13 @@ const Sidebar = () => {
             <div className = "flex flex-row  justify-center items-center gap-3 px-2 py-3 rounded-full ">
               {/* for image */}
               <div className ="w-12 h-12 rounded-full shrink-0">
-                <img src={profilePic} alt="profilePic" className ="h-full w-full object-cover object-center rounded-full"/>
+                <img src={user?.profilePic?.url} alt="profilePic" className ="h-full w-full object-cover object-center rounded-full"/>
               </div>
 
               {/* for name and username */}
               <div className ="max-md:hidden flex flex-col w-full gap-0 ">
-                <span className = "font-semibold">Bibek Pandit</span>
-                <span className = "text-xs md:text-xs lg:text-sm ">stars.winner1121@gmail.com</span>
+                <span className = "font-semibold">{user?.name}</span>
+                <span className = "text-xs md:text-xs lg:text-sm ">{user?.email}</span>
               </div>  
             
             </div>

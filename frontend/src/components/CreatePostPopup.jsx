@@ -20,12 +20,12 @@
 
     },[isSuccess]);
 
-    useEffect(()=>{
+    // useEffect(()=>{
 
-      if(isError){
-        toast.error("Failed to create post");
-      }
-    },[isError])
+    //   if(isError){
+    //     toast.error("Failed to create post");
+    //   }
+    // },[isError])
 
     const [text, setText] = useState("");
     const [images, setImages] = useState([]);
@@ -65,6 +65,7 @@
 
       createPostMutation(formData, {
           onSuccess:()=>{
+            toast.success("Post created successfully");
             setText("");
             setImages([]);
             setVideo(null);
@@ -72,6 +73,7 @@
           },
           onError:(err)=>{
             console.log(err);
+            toast.error(err.response?.data?.message || "An error occured");
           }
 
         }
@@ -123,7 +125,7 @@
             <span className="w-full">
               <textarea
                 cols={40}
-                className="no-scrollbar min-h-32 w-full text-font-secondary-color resize-none outline-none placeholder:text-font-secondary-color text-base bg-red-500 rounded-2xl px-2 py-3 caret-blue-500"
+                className="no-scrollbar min-h-32 w-full text-font-secondary-color resize-none outline-none placeholder:text-font-secondary-color text-base rounded-2xl px-2 py-3 caret-blue-500"
                 name="text"
                 placeholder="What's happening"
                 onChange={(e) => setText(e.target.value)}
@@ -158,6 +160,8 @@
             </div>
           )}
 
+
+          <div>
           {
             video && 
             (
@@ -166,6 +170,7 @@
               </video>
             )
           }
+          </div>
 
           </div>
 
