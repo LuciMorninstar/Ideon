@@ -21,6 +21,7 @@ body{
 }
 
 
+
 @keyframes moveUp{
     from{
         opacity:0%;
@@ -100,6 +101,10 @@ body{
     .form_input_style{
         @apply px-5 py-2 w-full bg-secondary-background outline-none caret-blue-500 rounded-2xl opacity-70 brightness-100
 
+    }
+
+    .button_style{
+        @apply px-4 py-2 bg-gradient-to-r from-blue-500 via-teal-500 to-blue-400 rounded-2xl  font-semibold cursor-pointer flex flex-row items-center justify-center
     }
 
 }
