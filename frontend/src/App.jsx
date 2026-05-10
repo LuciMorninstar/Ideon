@@ -9,9 +9,14 @@
   import SignInPage from './pages/SignInPage'
 
   import { useAuthStore } from './stores/useAuthStore'
+  import {Navigate} from "react-router"
+  import FriendsPage from "./pages/FriendsPage"
+import SidebarLayout from './layouts/SidebarLayout'
+
 
   const App = () => {
 
+    const user = useAuthStore((state)=>state.user);
 
       const queryClient = new QueryClient();
 
@@ -39,8 +44,15 @@
           <Route index element = {<HomePage/>}/>
 
           </Route>
+          
           <Route path="/signUp" element = {<SignUpPage/>}/>
           <Route path="/signIn" element = {<SignInPage/>}/>
+
+          {/* SidebarLayout TO show sidebar along with pages */}
+          <Route path = "/" element = {<SidebarLayout/>}>
+          <Route path="/friends" element = {<FriendsPage/>}/>
+
+          </Route>
 
         </Routes>
 

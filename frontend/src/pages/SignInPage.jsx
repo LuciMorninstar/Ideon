@@ -27,7 +27,8 @@ const SignInPage = () => {
 
     signInMutation(formData,{
       onSuccess:(data)=>{
-        // useAuthStore.getState().setUser(data?.user)
+       
+
         setUser(data?.user);
         setFormData({ email:"", password:""});
         toast.success("Sign In Successful");

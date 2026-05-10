@@ -4,8 +4,19 @@ import { FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
 
 import { GoBookmark } from "react-icons/go";
+import { useToggleBookmarks } from "../hooks/usePost";
 
 const PostActions = () => {
+
+const {mutate:toggleBookmarks, isPending, isSuccess, isError}= useToggleBookmarks();
+
+
+const handleBookmarksClick = (e)=>{
+  e.preventDefault();
+
+
+}
+
   const postActions = [
     {
       name: "Like",
@@ -29,13 +40,14 @@ const PostActions = () => {
       name: "Bookmark",
       icon: <GoBookmark />,
       count: 3,
-      color:"teal"
+      color:"teal",
+      onClick:handleBookmarksClick
     },
   ];
   return (
     <section className="flex flex-row justify-evenly py-2">
       {postActions.map((item, i) => (
-        <div key={item.name} className=" group flex flex-row gap-1 items-center cursor-pointer ">
+        <div onClick={item.onClick || ""} key={item.name} className=" group flex flex-row gap-1 items-center cursor-pointer ">
           <span className={`relative text-font-quaternary-color text-base sm:text-lg before:absolute before:content-[''] before:w-8 before:h-8 before:rounded-full before:opacity-0 before:transition-all before:duration-150 before:z-10 before:top-1/2 before:-translate-y-1/2 before:-left-1/2 before:translate-x-0.5  group-hover:before:opacity-30
 
           ${item.color === "pink" && "group-hover:before:bg-pink-500 group-hover:text-pink-500 "}

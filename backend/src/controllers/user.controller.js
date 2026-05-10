@@ -229,6 +229,32 @@ export const searchFromFriend = async(req,res,next)=>{
     }
 }
 
+export const getAllUsers = async(req,res,next)=>{
+
+  try {
+    const users = await User.find().select("name email profilePic");
+
+    if(!users){
+      const err = new Error("No users found!");
+      err.statusCode = 404;
+      return next(err);
+    }
+
+    return res.status(200).json({
+      success:true,
+      message:"Successfully fetched all users",
+      users
+    })
+    
+
+    
+  } catch (error) {
+    console.log(`Error in the getAllUsers Controller: ${error.message}`);
+    next(error);
+    
+  }
+}
+
 
 
 
