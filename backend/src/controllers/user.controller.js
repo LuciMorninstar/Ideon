@@ -109,7 +109,7 @@ export const getAllMyFriends = async (req, res, next) => {
 
     const user = await User.findById(myId)
       .select("friends")
-      .populate("friends", "name profilePic ");
+      .populate("friends", "name profilePic email ");
 
     if (!user) {
       const err = new Error("No user found!");
@@ -120,7 +120,7 @@ export const getAllMyFriends = async (req, res, next) => {
     const allMyFriends = user.friends;
 
     if (!allMyFriends.length) {
-      return res.status(200).status({
+      return res.status(200).json({
         success: true,
         message: "No friends in contact",
       });

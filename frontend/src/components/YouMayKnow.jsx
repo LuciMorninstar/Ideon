@@ -3,14 +3,46 @@ import hero from "../assets/hero.png"
 import japan from "../assets/japan.jpg"
 import moon from "../assets/moon.jpg"
 import signup from "../assets/signup(Ide).png"
-import { useGetAllUsers } from '../hooks/useUser'
+import { useAddAsFriend, useGetAllUsers } from '../hooks/useUser'
 import FriendCardSkeleton from './skeletons/FriendCardSkeleton'
+import toast from 'react-hot-toast'
+import { Loader } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 
 
 const YouMayKnow = () => {
 
+  const [loadingId, setLoadingId] = useState(null); 
+  //This loading state is needed so that each id reacts separately of loading. The loading from the tanstack query is for all so each loading is triggered.
+
+  const queryClient = useQueryClient();
+
     const {isPending, isError, data:users, error} = useGetAllUsers();
     console.log(users, "users");
+
+    const {mutate:addAsFriendMutation,isPending:friendAddingPending  } = useAddAsFriend();
+
+    const handleAddFriend = (e,id)=>{
+      e.preventDefault();
+
+      setLoadingId(id);
+
+      addAsFriendMutation(id,{
+        onSuccess:()=>{
+          toast.success("Added to friendlist");
+          queryClient.invalidateQueries({queryKey:['allMyFriends']});
+          setLoadingId(null);
+        },
+        onError:(err)=>{
+          console.log(err);
+          toast.error(err?.response?.data?.message || "Something went wrong");
+            setLoadingId(null);
+
+        }
+      })
+
+    }
 
 
 
@@ -24,7 +56,7 @@ const YouMayKnow = () => {
         {
             (users || []).map((user,i)=>(
                 <div key={user?._id}
-                 className = "w-full px-2 py-2 lg:px-0 lg:py-0  flex flex-row lg:flex-row-reverse gap-4 items-center group overflow-hidden even:bg-secondary-background  cursor-pointer lg:pl-5 lg:border-l-2 border-l-blue-500 lg:not-[]:rounded-xl   "
+                 className = "w-full px-2 py-2 lg:px-0 lg:py-0  flex flex-row lg:flex-row-reverse gap-4 items-center group overflow-hidden even:bg-secondary-background  cursor-pointer lg:pl-5 lg:border-l-2 border-l-blue-500 rounded-2xl   "
                  >
                     {/* left part-for lgall screen right for lg and up */}
                     <div className = " lg:w-5/12 lg:overflow-hidden lg:rotate-12 lg:grayscale-50 lg:scale-130 lg:group-hover:rotate-0 lg:group-hover:scale-100 lg:group-hover:grayscale-0 transition-all duration-200 ease-in  ">
@@ -50,7 +82,7 @@ const YouMayKnow = () => {
                         {/* for buttons */}
                 
                         <span className = "mt-1 flex flex-row gap-2 md:gap-5 w-full ">
-                        <button className = "button_style text-xs lg:text-sm xl:text-base">Add Friend</button>
+                        <button onClick = {(e)=>handleAddFriend(e,user?._id)} className = "button_style text-xs lg:text-sm xl:text-base">{loadingId === user?._id? <Loader className = "animate-spin"/> : "Add Friend"}</button>
                         <button className = "button_style text-xs lg:text-sm xl:text-base">Ignore</button>
                         </span>
     
