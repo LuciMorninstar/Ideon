@@ -8,6 +8,8 @@ import { useAuthStore } from "../stores/useAuthStore";
 dayjs.extend(relativeTime);
 
 const Post = ({ post }) => {
+
+  
   return (
     // wrapper
     <div className="flex flex-col gap-2 px-2 py-1 lg:px-4 lg:py-2 border-b border-border-color">
@@ -90,7 +92,7 @@ const Post = ({ post }) => {
       {/* 2nd part ends */}
 
       {/* postActions */}
-      <PostActions />
+      <PostActions post={post} />
     </div>
     // /wrapper ends
   );

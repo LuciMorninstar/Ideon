@@ -1,360 +1,392 @@
 import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
-import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../utils/cloudinary.js";
 
-export const createPost = async(req,res,next)=>{
-    const myId = req.user._id;
+export const createPost = async (req, res, next) => {
+  const myId = req.user._id;
 
-    const {text} = req.body;
+  const { text } = req.body;
 
-    try {
-        if(!myId){
-            const err = new Error("No User Id provided");
-            err.statusCode = 401;
-            return next(err);
-        }
-    
-        let imagesUrls = [];
-
-        if(req.files?.images?.length >0){
-            const uploadImages =  await uploadOnCloudinary(req.files.images.map((img)=>img.path));
-
-            imagesUrls = uploadImages.map(img=>({
-                url:img.url,
-                public_id:img.public_id
-            }))   
-        }
-
-        let videoUrl = null;
-
-        if(req.files?.video?.[0]){
-            const uploadVideo = await uploadOnCloudinary(req.files.video[0].path);
-            
-            videoUrl = {
-                url:uploadVideo.url,
-                public_id:uploadVideo.public_id
-            }
-        }
-
-        if(!text && imagesUrls.length === 0 && !videoUrl){
-            const err = new Error("Cannot create an empty post");
-            err.statusCode = 400;
-            return next(err);
-        }
-
-      
-        const post = await Post.create({
-            owner:myId,
-            text:text,
-            images:imagesUrls,
-            video:videoUrl
-
-        })
-
-        return res.status(201).json({
-            success:true,
-            message:"Post created successfully",
-            post:post
-        })
-
-      
-        
-    } catch (error) {
-        console.log(`Error in the createPost controller: ${error.message} `);
-        next(error);
-        
+  try {
+    if (!myId) {
+      const err = new Error("No User Id provided");
+      err.statusCode = 401;
+      return next(err);
     }
 
-  
+    let imagesUrls = [];
 
-}
+    if (req.files?.images?.length > 0) {
+      const uploadImages = await uploadOnCloudinary(
+        req.files.images.map((img) => img.path),
+      );
 
-export const updatePost = async(req,res,next)=>{
-    const {id:postId} = req.params;
-    const {text} = req.body;
-    const userId =req.user._id;
+      imagesUrls = uploadImages.map((img) => ({
+        url: img.url,
+        public_id: img.public_id,
+      }));
+    }
 
-    try {
-        const post = await Post.findById(postId);
-        if(!post){
-            const err = new Error("Post not found!");
-            err.statusCode = 404;
-            return next(err);
-        }
-        const isOwnerOfPost = post.owner.toString() === userId.toString();
-        
-        if(!isOwnerOfPost){
-            const err = new Error("You are not authorized to update the post");
-            err.statusCode = 401;
-            return next(err);
-        }
+    let videoUrl = null;
 
-        let imageUrls = [];
+    if (req.files?.video?.[0]) {
+      const uploadVideo = await uploadOnCloudinary(req.files.video[0].path);
 
-        if(req.files?.images?.length>0){
-            const uploadImages = await uploadOnCloudinary(req.files?.images?.map((img)=>img.path))
+      videoUrl = {
+        url: uploadVideo.url,
+        public_id: uploadVideo.public_id,
+      };
+    }
 
-            imageUrls = uploadImages.map((img)=>({
-                url:img.url,
-                public_id:img.public_id
-            }))
-        }
+    if (!text && imagesUrls.length === 0 && !videoUrl) {
+      const err = new Error("Cannot create an empty post");
+      err.statusCode = 400;
+      return next(err);
+    }
 
-        let videoUrl = null;
+    const post = await Post.create({
+      owner: myId,
+      text: text,
+      images: imagesUrls,
+      video: videoUrl,
+    });
 
-        if(req.files?.video){
-            const uploadVideo = await uploadOnCloudinary(req.files.video.path);
-            
-            videoUrl = {
-                url:uploadVideo.url,
-                public_id:uploadVideo.public_id
-            }
-        }
+    return res.status(201).json({
+      success: true,
+      message: "Post created successfully",
+      post: post,
+    });
+  } catch (error) {
+    console.log(`Error in the createPost controller: ${error.message} `);
+    next(error);
+  }
+};
 
-        const updatedPost = await Post.findByIdAndUpdate(postId,{
-            text:text ? text :post.text,
-            date:Date.now(),
-            isEdited:true,
-            images:imageUrls.length >0 ? imageUrls:post.images,
-            video:videoUrl ? videoUrl : post.video
-        },
-        {new:true}
+export const updatePost = async (req, res, next) => {
+  const { id: postId } = req.params;
+  const { text } = req.body;
+  const userId = req.user._id;
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      const err = new Error("Post not found!");
+      err.statusCode = 404;
+      return next(err);
+    }
+    const isOwnerOfPost = post.owner.toString() === userId.toString();
+
+    if (!isOwnerOfPost) {
+      const err = new Error("You are not authorized to update the post");
+      err.statusCode = 401;
+      return next(err);
+    }
+
+    let imageUrls = [];
+
+    if (req.files?.images?.length > 0) {
+      const uploadImages = await uploadOnCloudinary(
+        req.files?.images?.map((img) => img.path),
+      );
+
+      imageUrls = uploadImages.map((img) => ({
+        url: img.url,
+        public_id: img.public_id,
+      }));
+    }
+
+    let videoUrl = null;
+
+    if (req.files?.video) {
+      const uploadVideo = await uploadOnCloudinary(req.files.video.path);
+
+      videoUrl = {
+        url: uploadVideo.url,
+        public_id: uploadVideo.public_id,
+      };
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      {
+        text: text ? text : post.text,
+        date: Date.now(),
+        isEdited: true,
+        images: imageUrls.length > 0 ? imageUrls : post.images,
+        video: videoUrl ? videoUrl : post.video,
+      },
+      { new: true },
     );
 
     return res.status(200).json({
-        success:true,
-        message:"Updated post successfully",
-        post:updatedPost
-    })
+      success: true,
+      message: "Updated post successfully",
+      post: updatedPost,
+    });
+  } catch (error) {
+    console.log(`Error in the updatePost controller ${error.message}`);
+    next(error);
+  }
+};
 
+export const deletePost = async (req, res, next) => {
+  const myId = req.user?.id;
+  const { id: postId } = req.params;
 
-        
-    } catch (error) {
-        console.log(`Error in the updatePost controller ${error.message}`);
-        next(error);
-        
+  try {
+    if (!myId) {
+      const err = new Error("Unauthorized Access");
+      err.statusCode = 401;
+      return next(err);
     }
 
-}
-
-export const deletePost = async(req,res,next)=>{
-    const myId = req.user?.id;
-    const {id:postId} = req.params;
-
-    try {
-
-        if(!myId){
-        const err = new Error("Unauthorized Access");
-        err.statusCode = 401;
-        return next(err);
-}
-      
-        const post = await Post.findById({_id:postId});
-        if(!post){
-            const err = new Error("No post to delete");
-            err.statusCode = 400;
-            return next(err);
-        }
-
-        if(post.owner.toString() !== myId.toString()){
-            const err = new Error("UnAuthorized! You are not the owner of the post");
-            err.statusCode = 403;
-            return next(err);
-
-        }
-
-        if(post.images?.length >0){
-           for(const img of post.images){
-            await deleteFromCloudinary(img.public_id);
-           }
-        }
-
-        if(post.video){
-            await deleteFromCloudinary(post.video.public_id);
-        }
-
-        await Post.findByIdAndDelete(postId);
-
-        return res.status(200).json({
-            success:true,
-            message:"Successfully deleted the post"
-        });
-
-     
-
-        
-    } catch (error) {
-        console.log(`Error deleting the post: ${error.message}`);
-        next(error);
-        
+    const post = await Post.findById({ _id: postId });
+    if (!post) {
+      const err = new Error("No post to delete");
+      err.statusCode = 400;
+      return next(err);
     }
 
+    if (post.owner.toString() !== myId.toString()) {
+      const err = new Error("UnAuthorized! You are not the owner of the post");
+      err.statusCode = 403;
+      return next(err);
+    }
 
-}
+    if (post.images?.length > 0) {
+      for (const img of post.images) {
+        await deleteFromCloudinary(img.public_id);
+      }
+    }
 
-export const toggleBookmarks = async(req,res,next)=>{
-    const myId = req.user._id;
-    const {id:postId} = req.params;
+    if (post.video) {
+      await deleteFromCloudinary(post.video.public_id);
+    }
 
-    try {
-        if(!myId){
-            const err = new Error("UnAuthorized Access");
-            err.statusCode = 401;
-            return next(err);
-        }
+    await Post.findByIdAndDelete(postId);
 
-        const user = await User.findById(myId);
+    return res.status(200).json({
+      success: true,
+      message: "Successfully deleted the post",
+    });
+  } catch (error) {
+    console.log(`Error deleting the post: ${error.message}`);
+    next(error);
+  }
+};
 
-        const isBookmarked = user.bookmarks.includes(postId);
+export const toggleBookmarks = async (req, res, next) => {
+  const myId = req.user._id;
+  const { postId } = req.params;
 
-        const updatedUser = await User.findByIdAndUpdate(myId,
-            isBookmarked ? {$pull : {bookmarks:postId}}
-            : {$addToSet : {bookmarks:postId}},
-            {new:true}
-        )
+  try {
+    if (!myId) {
+      const err = new Error("UnAuthorized Access");
+      err.statusCode = 401;
+      return next(err);
+    }
 
-        return res.status(200).json({
-            success:true,
-            message:isBookmarked ? "Removed From Bookmarks" : "Added to Bookmarks",
-            bookmarks:updatedUser.bookmarks,
-            isBookmarked:!isBookmarked
+    const user = await User.findById(myId);
 
-        })
-        
-    } catch (error) {
-        console.log(`Error in the addToBookmarks controller : ${error.message}`);
-        next(error);
-        
-    }   
-    
-}
+    const isBookmarked = user.bookmarks.includes(postId);
 
-export const increaseClickCount = async(req,res,next)=>{
-    const {id:postId} = req.params;
+    const updatedUser = await User.findByIdAndUpdate(
+      myId,
+      isBookmarked
+        ? { $pull: { bookmarks: postId } }
+        : { $addToSet: { bookmarks: postId } },
+      { new: true },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: isBookmarked ? "Removed From Bookmarks" : "Added to Bookmarks",
+      bookmarks: updatedUser.bookmarks,
+      bookmarkCount: updatedUser.bookmarks.length,
+      isBookmarked: !isBookmarked,
+    });
+  } catch (error) {
+    console.log(`Error in the addToBookmarks controller : ${error.message}`);
+    next(error);
+  }
+};
+
+export const increaseClickCount = async (req, res, next) => {
+  const { id: postId } = req.params;
+  const myId = req.user?._id;
+
+  try {
+    if (!myId) {
+      const err = new Error("UnAuthorized Access!");
+      err.statusCode = 401;
+      return next(err);
+    }
+
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { $inc: { clickCount: 1 } },
+      { new: true },
+    );
+
+    if (!post) {
+      const err = new Error("No post found");
+      err.statusCode = 404;
+      return next(err);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Increased clickCount of post",
+      postClickCount: post.clickCount,
+    });
+  } catch (error) {
+    console.log(
+      `Error in the increaseClickCount controller : ${error.message}`,
+    );
+    next(error);
+  }
+};
+
+export const reactToPost = async (req, res, next) => {
+  const { id: postId } = req.params;
+  const { reactionType } = req.body;
+  const myId = req.user?._id;
+  const validReactions = ["like", "haha", "cry", "love", "sad"];
+
+  try {
+    if (!validReactions.includes(reactionType)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Reaction Type",
+      });
+    }
+    // This is incase of any other enum reaction values let's say likey
+
+    if (!myId) {
+      const err = new Error("UnAuthorized Access!");
+      err.statusCode = 401;
+      return next(err);
+    }
+
+    const post = await Post.findById(postId);
+
+    const existingUserReaction = post.reactions.find(
+      (r) => r.user.toString() === myId.toString(),
+    );
+
+    if (!existingUserReaction) {
+      post.reactions.push({ user: myId, reactionType: reactionType });
+    } else if (existingUserReaction.reactionType === reactionType) {
+      post.reactions = post.reactions.filter(
+        (r) => r.user.toString() !== myId.toString(),
+      );
+    } else {
+      existingUserReaction.reactionType = reactionType;
+    }
+
+    await post.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Reaction",
+      reactions: post.reactions,
+    });
+  } catch (error) {
+    s;
+    console.log(`Error in the reactToPost controller :${error.message}`);
+    next(error);
+  }
+};
+
+
+export const getAllPosts = async (req, res, next) => {
     const myId = req.user?._id;
+  try {
+    const posts = await Post.find().populate("owner", "name profilePic");
 
-    try {
-        if(!myId){
-            const err = new Error("UnAuthorized Access!");
-            err.statusCode = 401;
-            return next(err);
-        }
-
-        const post = await Post.findByIdAndUpdate(postId,
-            {$inc:{clickCount:1}},
-            {new:true}
-        );
-
-        if(!post){
-            const err = new Error("No post found");
-            err.statusCode = 404;
-            return next(err);
-        }
-
-
-        return res.status(200).json({
-            success:true,
-            message:"Increased clickCount of post",
-            postClickCount:post.clickCount
-
-        })
-
-
-        
-    } catch (error) {
-        console.log(`Error in the increaseClickCount controller : ${error.message}`);
-        next(error);
-
-        
+    if (!posts || posts.length === 0) {
+      const err = new Error("No posts found");
+      err.statusCode = 404;
+      return next(err);
     }
 
+    //for isBookmarked
+    const currentUser = await User.findById(myId).select("bookmarks");
 
-}
+    // annotateed means adding Extra information on top So we use ...
 
-export const reactToPost = async(req,res,next)=>{
-    const {id:postId} = req.params;
-    const {reactionType} = req.body;
-    const myId = req.user?._id;
-    const validReactions = ["like", "haha", "cry", "love", "sad"];
-
-    try {
-
-        if(!validReactions.includes(reactionType)){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid Reaction Type"
-            })
-        }
-        // This is incase of any other enum reaction values let's say likey
-
-        if(!myId){
-            const err = new Error("UnAuthorized Access!");
-            err.statusCode = 401;
-            return next(err);
-        }
-
-        const post = await Post.findById(postId);
-
-        const existingUserReaction = post.reactions.find((r)=>r.user.toString() === myId.toString());
-
-        if(!existingUserReaction){
-            post.reactions.push({user:myId, reactionType:reactionType})
-        }
-        else if(existingUserReaction.reactionType === reactionType){
-           post.reactions = post.reactions.filter((r)=>r.user.toString() !== myId.toString())
-        }
-        else{
-            existingUserReaction.reactionType = reactionType;
-        }
-
-        await post.save();
-
-        return res.status(200).json({
-            success:true,
-            message:"Reaction",
-            reactions:post.reactions
-        })
-
-        
-    } catch (error) {s
-        console.log(`Error in the reactToPost controller :${error.message}`);
-        next(error);
-        
-    }
     
-}
+    const annotatedPosts = posts.map((post)=>({
+        ...post.toObject(),  //add all the info of posts
+        //extra info to send are
+        reactionsCount:post.reactions.length,
+        commentCount:post.reactions.length,
+        sharesCount:post.reactions.length,
+
+        isBookmarked:currentUser.bookmarks.map((bookmarkdId)=>bookmarkdId.toString()).includes(post._id.toString()),
+
+        reactionCounts:{
+            like:post.reactions.filter((r)=>r.reactionType === "like").length,
+            haha:post.reactions.filter((r)=>r.reactionType === "haha").length,
+            cry:post.reactions.filter((r)=>r.reactionType === "cry").length,
+            love:post.reactions.filter((r)=>r.reactionType === "love").length,
+            sad:post.reactions.filter((r)=>r.reactionType === "sad").length
+
+        },
+
+        myReaction:post.reactions.find((r)=>r.user.toString()===myId.toString())?.reactionType || null,
 
 
-export const getAllPosts = async(req,res,next)=>{
-
-    try {
-        const posts = await Post.find().populate("owner","name profilePic" );
-
-        if(!posts || posts.length === 0){
-            const err = new Error ("No posts found");
-            err.statusCode = 404;
-            return next(err);
-        }
-
-        return res.status(200).json({
-            success:true,
-            message:"Successfully fetched all posts",
-            posts
-        })
+        // Since sabai post map gariyeko xa so yedi user ko bookmarks array ko id yedi yo posts haru madye kunai post man milxa vani tyo isBookmarked:true hunxa
         
-        
-    } catch (error) {
-        console.log(`Error in the getAllPosts controller : ${error.message}`);
-        next(error);
-        
-    }
-}
+    }))
 
+    return res.status(200).json({
+      success: true,
+      message: "Successfully fetched all posts",
+      posts:annotatedPosts
+    });
+  } catch (error) {
+    console.log(`Error in the getAllPosts controller : ${error.message}`);
+    next(error);
+  }
+};
 
+// export const getBookmarkedPosts = async (req, res, next) => {
+//   const myId = req.user?._id;
 
+//   try 
+//   {
+//      const currentUser = await User.findById(myId).populate({
+//     path: "bookmarks",
+//     populate: {
+//       path: "owner",
+//       select: "name profilePic",
+//     },
+//   });
 
+//   const bookmarkedPosts = currentUser.bookmarks.map((post)=>({
+//     ...post.toObject(),
+//     isBookmarked:true,
+//     reactionsCount:post.reactions.length,
+//     commentsCount:post.comments.length,
+//     sharesCount:post.shares.length,
+//     isEdited:post.isEdited,
 
+//   }))
 
-
-
-
+//   return res.status(200).json({
+//     success:true,
+//     bookmarkedPosts
+//   })
+    
+//   } catch (error) {
+//     console.log(`Error in the getBookmarkedPosts controller: ${error.message}`);
+//     next(error);
+    
+//   }
+ 
+// };
