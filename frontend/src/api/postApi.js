@@ -12,7 +12,6 @@ export const createPost = async(formData)=>{
 }
 
 export const toggleBookmarks = async(postId)=>{
-    const response = await axios.patch(`/post/toggleBookmarks/${postId}`);
-    return response.data;
+    const response = await axios.patch(`/user/toggleBookmarks/${postId}`);
+    return response.data.isBookmarked;
 }
-

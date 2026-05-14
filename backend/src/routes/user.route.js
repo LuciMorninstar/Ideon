@@ -11,8 +11,7 @@ router.get("/search", searchUsers);
 router.get("/searchFromFriend", protectRoute, searchFromFriend);
 router.post("/:id", protectRoute, addAsFriend);
 router.patch("/:id", protectRoute, unfriend);
-
-
+router.patch("/toggleBookmarks/:postId", protectRoute, toggleBookmarks);
 
 
 
