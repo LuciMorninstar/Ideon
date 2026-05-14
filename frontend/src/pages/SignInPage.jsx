@@ -29,7 +29,7 @@ const SignInPage = () => {
       onSuccess:(data)=>{
        
 
-        setUser(data?.user);
+        setUser(data);
         setFormData({ email:"", password:""});
         toast.success("Sign In Successful");
         navigate("/")   
