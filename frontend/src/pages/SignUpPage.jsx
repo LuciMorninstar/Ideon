@@ -49,7 +49,7 @@ const SignUpPage = () => {
         toast.success("Account created successfully");
         navigate("/signin")
       },
-// 
+
       onError:(err)=>{
         console.log(err);
         toast.error(err?.response?.data?.message || "Something went wrong");

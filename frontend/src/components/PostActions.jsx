@@ -5,41 +5,14 @@ import { PiShareFatLight } from "react-icons/pi";
 
 import { GoBookmark } from "react-icons/go";
 import { useToggleBookmarks } from "../hooks/usePost";
-import toast from "react-hot-toast";
-import { useState } from "react";
 
-const PostActions = ({post}) => {
+const PostActions = () => {
 
-const {mutate:toggleBookmarksMutation, isPending, isSuccess, isError}= useToggleBookmarks();
-
-// const [isBookmarked, setIsBookmarked] = useState(false);
-const [bookmarkCount, setBookmarkCount] = useState(0);
-
-
-// console.log(isBookmarked);
-
-
-const postId = post._id;
+const {mutate:toggleBookmarks, isPending, isSuccess, isError}= useToggleBookmarks();
 
 
 const handleBookmarksClick = (e)=>{
   e.preventDefault();
-  toggleBookmarksMutation(postId,{
-
-    onSuccess:(data)=>{
-      toast.success(data?.message || "Toggled Bookmarks");
-      // setIsBookmarked(data?.isBookmarked);
-      setBookmarkCount(data?.bookmarkCount);
-      
-    },
-
-    onError:(err)=>{
-      console.log(err.message);
-      toast.error(err?.response?.data?.message || "Something went wrong");
-    }
-  })
- 
-
 
 
 }
@@ -48,24 +21,25 @@ const handleBookmarksClick = (e)=>{
     {
       name: "Like",
       icon: <IoHeartOutline />,
-      count: post?.reactionsCount || 0,
+      count: 10,
       color:"pink"
     },
     {
       name: "Comment",
       icon: <FaRegComment />,
-      count: post?.commentsCount || 0,
+      count: 20,
       color:"green"
     },
     {
       name: "Share",
       icon: <PiShareFatLight />,
-      count: post?.sharesCount || 0,
+      count: 5,
       color:"blue"
     },
     {
       name: "Bookmark",
       icon: <GoBookmark />,
+      count: 3,
       color:"teal",
       onClick:handleBookmarksClick
     },
@@ -73,7 +47,7 @@ const handleBookmarksClick = (e)=>{
   return (
     <section className="flex flex-row justify-evenly py-2">
       {postActions.map((item, i) => (
-        <div onClick={item.onClick} key={item.name} className=" group flex flex-row gap-1 items-center cursor-pointer ">
+        <div onClick={item.onClick || ""} key={item.name} className=" group flex flex-row gap-1 items-center cursor-pointer ">
           <span className={`relative text-font-quaternary-color text-base sm:text-lg before:absolute before:content-[''] before:w-8 before:h-8 before:rounded-full before:opacity-0 before:transition-all before:duration-150 before:z-10 before:top-1/2 before:-translate-y-1/2 before:-left-1/2 before:translate-x-0.5  group-hover:before:opacity-30
 
           ${item.color === "pink" && "group-hover:before:bg-pink-500 group-hover:text-pink-500 "}
@@ -82,7 +56,7 @@ const handleBookmarksClick = (e)=>{
           ${item.color === "teal" && "group-hover:before:bg-teal-500 group-hover:text-teal-500"}
             
             `}>
-            <span className ={item.name === "Bookmark"? post.isBookmarked? "text-blue-500":"":""}>{item.icon}</span>
+            {item.icon}
           </span>
           <span className={` text-font-qusaternary-color text-xs sm:text-sm
             ${item.color === "pink" && "group-hover:text-pink-500"}
