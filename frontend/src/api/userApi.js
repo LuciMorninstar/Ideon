@@ -8,8 +8,8 @@ export const getAllUsers = async()=>{
     
 }
 
-export const getAllMyFriends = async()=>{
-    const response = await axios.get("/user/myFriends");
+export const getFriendsByUserId = async(userId)=>{
+    const response = await axios.get( `/user/friends/${userId}`);
     return response.data.friends;
 
 }
@@ -24,3 +24,9 @@ export const unfriend = async(id)=>{
     const response = await axios.patch(`/user/${id}`);
     return response.data;
 } 
+
+export const getUserDetails = async(id)=>{
+    const response = await axios.get(`/user/${id}`);
+    return response.data.user;
+
+}

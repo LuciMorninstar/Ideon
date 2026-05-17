@@ -16,3 +16,8 @@ export const toggleBookmarks = async(postId)=>{
     return response.data;
 }
 
+export const getPostsByUserId = async(userId)=>{
+    const response = await axios.get(`/post/${userId}`);
+    return response.data.posts;
+}
+

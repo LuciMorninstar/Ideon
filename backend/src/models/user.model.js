@@ -35,6 +35,14 @@ const userSchema = new mongoose.Schema({
         url:{type:String, default:null},
         public_id:{type:String, default:null}
     },
+    coverImage:{
+         url:{type:String, default:null},
+        public_id:{type:String, default:null}
+    },
+    
+    bio:{
+        type:String,
+    },
     
     posts:[
         {

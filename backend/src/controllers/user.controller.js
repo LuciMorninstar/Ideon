@@ -97,17 +97,17 @@ export const unfriend = async (req, res, next) => {
   }
 };
 
-export const getAllMyFriends = async (req, res, next) => {
-  const myId = req.user?.id;
+export const getFriendsByUserId = async (req, res, next) => {
+  const userId = req.params.id;
 
   try {
-    if (!myId) {
-      const err = new Error("UnAuthorized Access!");
+    if (!userId) {
+      const err = new Error("No user Id");
       err.statusCode = 401;
       return next(err);
     }
 
-    const user = await User.findById(myId)
+    const user = await User.findById(userId)
       .select("friends")
       .populate("friends", "name profilePic email ");
 
@@ -253,6 +253,50 @@ export const getAllUsers = async(req,res,next)=>{
     next(error);
     
   }
+}
+
+export const getUserDetails = async(req,res,next)=>{
+
+  const myId = req.user?._id;
+  const userId = req.params.id;
+
+  try {
+    if(!myId){
+      const err = new Error("UnAuthorized Access!");
+      err.statusCode = 401;
+      return next(err);
+    }
+
+    if(!userId){
+      const err = new Error("No userId found to find details");
+      err.statusCode = 404;
+      return next(err);
+    }
+
+    const user = await User.findById(userId).select("-password");
+
+    if(!user){
+      const err = new Error("No user found");
+      err.statusCode = 404;
+      return next(err);
+    }
+
+    return res.status(200).json({
+      success:true,
+      message:"Fetched details of the user",
+      user
+
+    })
+
+
+    
+  } catch (error) {
+    console.log( `Error in the getUserDetails Controller : ${error.message}`);
+    next(error);
+    
+  }
+
+
 }
 
 
