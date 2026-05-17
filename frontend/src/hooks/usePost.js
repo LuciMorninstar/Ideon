@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getAllPosts,createPost, toggleBookmarks } from "../api/postApi";
+import { getAllPosts,createPost, toggleBookmarks, getPostsByUserId } from "../api/postApi";
 
 export const useGetAllPosts = ()=>{
     return useQuery({
@@ -9,6 +9,7 @@ export const useGetAllPosts = ()=>{
     })
 
 }
+
 
 
 export const useCreatePost = ()=>{
@@ -21,5 +22,12 @@ export const useToggleBookmarks = ()=>{
     return useMutation({
         mutationFn:(postId)=>toggleBookmarks(postId)
 
+    })
+}
+
+export const useGetPostsByUserId = (userId)=>{
+    return useQuery({
+        queryKey:["posts",userId],
+        queryFn:()=>getPostsByUserId(userId)
     })
 }

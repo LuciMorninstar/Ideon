@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { addAsFriend, getAllMyFriends, getAllUsers, unfriend } from "../api/userApi";
+import { addAsFriend, getFriendsByUserId, getAllUsers, getUserDetails, unfriend } from "../api/userApi";
 export const useGetAllUsers = ()=>{
     return useQuery({
         queryKey:["allUsers"],
@@ -8,10 +8,10 @@ export const useGetAllUsers = ()=>{
     })
 }
 
-export const useGetAllMyFriends = ()=>{
+export const useGetFriendsByUserId = (userId)=>{
     return useQuery({
-        queryKey:["allMyFriends"],
-        queryFn:getAllMyFriends
+        queryKey:["friends",userId],
+        queryFn:()=>getFriendsByUserId(userId)
     })
 }
 
@@ -24,5 +24,13 @@ export const useAddAsFriend = ()=>{
 export const useUnFriend = ()=>{
     return useMutation({
         mutationFn:(id)=>unfriend(id)
+    })
+}
+
+export const useGetUserDetails = (userId)=>{
+    return useQuery({
+        queryKey:["user",userId],
+        queryFn:()=>getUserDetails(userId),
+        enabled:!!userId
     })
 }

@@ -1,22 +1,27 @@
 import React, { useState } from "react";
-import { useGetAllMyFriends, useUnFriend } from "../hooks/useUser";
+import { useGetFriendsByUserId, useGetUserDetails, useUnFriend } from "../hooks/useUser";
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import MyFriendsSkeleton from "./skeletons/MyFriendsSkeleton"
+import {Link} from "react-router"
+import { useAuthStore } from "../stores/useAuthStore";
 
-const MyFriends = () => {
+const MyFriends = ({id}) => {
+
+
+  const user = useAuthStore((state)=>state.user)
 
     const queryClient = useQueryClient();
 
     const [loadingId, setLoadingId] = useState(null);
 
-  const { isPending, isError, data: friends, error } = useGetAllMyFriends();
+  const { isPending, isError, data: friends, error } = useGetFriendsByUserId(id || user?._id);
+  //Here this is used because MyFriends component is used in both ProfileDetailsPage and FriendsPage so one expects the friends of the user and the other expects the friends of the logged in user.
 
-  console.log(friends, "myfriends");
+  console.log(friends, "myfriends");  
 
-  const { mutate: useUnFriendMutation, isPending: friendRemovingPending } =
-    useUnFriend();
+  const { mutate: useUnFriendMutation, isPending: friendRemovingPending } = useUnFriend();
 
   const handleRemoveFromFriend = (e, id) => {
     e.preventDefault();
@@ -40,12 +45,14 @@ const MyFriends = () => {
 
 };
 
+
+
 if (isPending) return (<MyFriendsSkeleton/>);
 if (isError) return "Error fetching MyFriends";
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2  gap-3 w-full px-5">
       {(friends || []).map((friend, i) => (
-        <div
+        <Link to ={`/profile/${friend._id}`}
           key={friend._id}
           className="flex flex-row justify-center items-center gap-3  rounded-full p-2  "
         >
@@ -78,7 +85,7 @@ if (isError) return "Error fetching MyFriends";
               )}
             </button>
           </div>
-        </div>
+        </Link>
       ))}
     </section>
   );

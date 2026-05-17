@@ -53,7 +53,7 @@ const Sidebar = () => {
     },
     {
       name:"Profile",
-      link:"/profile",
+      link:`/profile/${user?._id}`,
       icon:<BiSolidUser />,
       showNumber:false
     },

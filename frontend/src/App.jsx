@@ -12,6 +12,7 @@
   import {Navigate} from "react-router"
   import FriendsPage from "./pages/FriendsPage"
 import SidebarLayout from './layouts/SidebarLayout'
+import ProfileDetailsPage from './pages/ProfileDetailsPage'
 
 
   const App = () => {
@@ -51,6 +52,8 @@ import SidebarLayout from './layouts/SidebarLayout'
           {/* SidebarLayout TO show sidebar along with pages */}
           <Route path = "/" element = {<SidebarLayout/>}>
           <Route path="/friends" element = {<FriendsPage/>}/>
+       
+          <Route path="/profile/:id" element = {<ProfileDetailsPage/>}/>
 
           </Route>
 

@@ -305,7 +305,7 @@ export const reactToPost = async (req, res, next) => {
 export const getAllPosts = async (req, res, next) => {
     const myId = req.user?._id;
   try {
-    const posts = await Post.find().populate("owner", "name profilePic");
+    const posts = await Post.find().populate("owner", "name profilePic").sort({createdAt:-1});
 
     if (!posts || posts.length === 0) {
       const err = new Error("No posts found");
@@ -354,6 +354,57 @@ export const getAllPosts = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const getPostsByUserId = async(req,res,next)=>{
+  
+  const userId = req.params.id;
+
+  try {
+    const posts = await Post.find({owner:userId}).populate("owner", "name email profilePic ").sort({createdAt:-1});
+
+   if(!posts || posts.length === 0){
+  return res.status(200).json({
+    success: true,
+    message: "No posts found!",
+    posts: []
+  })
+}
+
+    const currentUser = await User.findById(userId).select("bookmarks");
+
+    const annotatedPosts = posts.map((post)=>({
+      ...post.toObject(),
+      reactionsCount:post.reactions.length,
+      commentsCount:post.comments.length,
+      sharesCount:post.shares.length,
+      isEdited:post.isEdited,
+      myReaction:post.reactions.find((r)=>r.user.toString()=== userId.toString())?.reactionType||null,
+      reactionCounts:{
+        like:post.reactions.filter((r)=>r.reactionType === "like").length,
+          haha:post.reactions.filter((r)=>r.reactionType === "haha").length,
+          cry:post.reactions.filter((r)=>r.reactionType === "cry").length,
+          love:post.reactions.filter((r)=>r.reactionType === "love").length,
+          sad:post.reactions.filter((r)=>r.reactionType === "sad").length
+
+      },
+      isBookmarked:currentUser.bookmarks.map((bookmarkdId)=>bookmarkdId.toString()).includes(post._id.toString()),
+
+
+    }))
+    
+    return res.status(200).json({
+      success:true,
+      message:"Successfully fetched posts",
+      posts:annotatedPosts
+    })
+    
+  } catch (error) {
+    console.log("Error in the getPostsByUserId controller: ",error.message);
+    next(error);
+    
+  }
+}
 
 // export const getBookmarkedPosts = async (req, res, next) => {
 //   const myId = req.user?._id;
