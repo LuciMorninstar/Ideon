@@ -406,6 +406,35 @@ export const getPostsByUserId = async(req,res,next)=>{
   }
 }
 
+export const getBookmarks = async(req,res,next)=>{
+  const myId = req.user?._id;
+  const filter = req.query.filter || "all";
+
+  try {
+    const user = await User.findById(myId).populate({
+      path:"bookmarks",
+      populate:{
+        path:"owner",
+        select:"name profilePic"
+      }
+    })
+
+    if(!user){
+      const err = new Error("No user found!");
+      err.statusCode = 404;
+      return next(err);
+    }
+
+    const bookmarks = user.bookmarks;
+    
+  } catch (error) {
+    next(error);
+    console.log(`Error in the getBookmarks controller: ${error.message}`);
+    
+  }
+
+}
+
 // export const getBookmarkedPosts = async (req, res, next) => {
 //   const myId = req.user?._id;
 
