@@ -21,3 +21,12 @@ export const getPostsByUserId = async(userId)=>{
     return response.data.posts;
 }
 
+export const reactToPost = async({postId, reactionType})=>{
+    const response = await axios.patch(`/post/react/${postId}`,reactionType);
+    return response.data.reactions;
+}
+
+// export const getBookmarks = async(filter)=>{
+//     const response = await axios.get(`/post/bookmarks`)
+// }
+

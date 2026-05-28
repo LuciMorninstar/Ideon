@@ -13,6 +13,7 @@
   import FriendsPage from "./pages/FriendsPage"
 import SidebarLayout from './layouts/SidebarLayout'
 import ProfileDetailsPage from './pages/ProfileDetailsPage'
+import BookmarkPage from './pages/BookmarkPage'
 
 
   const App = () => {
@@ -53,6 +54,7 @@ import ProfileDetailsPage from './pages/ProfileDetailsPage'
           <Route path = "/" element = {<SidebarLayout/>}>
           <Route path="/friends" element = {<FriendsPage/>}/>
        
+          <Route path="/bookmarks" element = {<BookmarkPage/>}/>
           <Route path="/profile/:id" element = {<ProfileDetailsPage/>}/>
 
           </Route>

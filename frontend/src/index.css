@@ -37,6 +37,23 @@ body{
     animation: moveUp 0.3s ease-in-out;
 }
 
+@keyframes infiniteUpDown{
+    0%{
+        transform:translateY(0px);
+    }
+    50%{
+        transform:translateY(15px);
+    }
+    100%{
+        transform:translateY(0px);
+    }
+  
+}
+
+#messageIcon{
+    animation: infiniteUpDown 1s ease-in-out infinite;
+}
+
 
 
 @layer base{

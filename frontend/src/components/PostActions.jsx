@@ -4,23 +4,26 @@ import { FaRegComment } from "react-icons/fa";
 import { PiShareFatLight } from "react-icons/pi";
 
 import { GoBookmark } from "react-icons/go";
-import { useToggleBookmarks } from "../hooks/usePost";
+import { useReactToPost, useToggleBookmarks } from "../hooks/usePost";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PostActions = ({post}) => {
+
+  const [activeReaction, setActiveReaction] = useState("love");
+
+  const queryClient = useQueryClient();
+
+
+  const postId = post._id;
 
 const {mutate:toggleBookmarksMutation, isPending, isSuccess, isError}= useToggleBookmarks();
 
 // const [isBookmarked, setIsBookmarked] = useState(false);
 const [bookmarkCount, setBookmarkCount] = useState(0);
 
-
 // console.log(isBookmarked);
-
-
-const postId = post._id;
-
 
 const handleBookmarksClick = (e)=>{
   e.preventDefault();
@@ -38,10 +41,46 @@ const handleBookmarksClick = (e)=>{
       toast.error(err?.response?.data?.message || "Something went wrong");
     }
   })
- 
+
+}
+
+const {mutate:reactToPostMutation, isPending:reactToPostPending, isSuccess:reactToPostSuccess, isError:reactToPostError}= useReactToPost();
+
+
+const handleLikeClick = (e)=>{
+  e.preventDefault();
+  const reactionType = activeReaction;
+
+  reactToPostMutation({postId,reactionType},{
+
+    onMutate:async({postId,reactionType})=>{
+      await queryClient.cancelQueries({queryKey:["allPosts"]});
+
+      const previousPosts = queryClient.getQueryData(['allPosts']);
+
+      queryClient.setQueryData(['allPosts'],(oldPosts)=>
+        oldPosts.map((post)=>post._id === postId ? {...post, likes:post.likes + 1}:post)
+      );
+
+      return {previousPosts};
+
+    },
+
+    onSuccess:(updatedPost)=>{
+      queryClient.setQueryData(['allPosts'], (oldPosts)=>oldPosts.map((post)=>post._id === updatedPost._id ? updatedPost : post))
+
+    },
+
+    onError:(_err,_postId,context)=>{
+      queryClient.setQueryData(['allPosts'], context.previousPosts);
+    }
 
 
 
+  })
+
+
+  
 }
 
   const postActions = [
@@ -49,7 +88,8 @@ const handleBookmarksClick = (e)=>{
       name: "Like",
       icon: <IoHeartOutline />,
       count: post?.reactionsCount || 0,
-      color:"pink"
+      color:"pink",
+      onClick:handleLikeClick
     },
     {
       name: "Comment",
