@@ -4,6 +4,7 @@ import { useAuthStore } from '../stores/useAuthStore'
 import MessageBoxSidebar from './MessageBoxSidebar';
   import { GiCrossMark } from "react-icons/gi";
 import { useMessageStore } from '../hooks/useMesssageStore';
+import MessageContent from './MessageContent';
 
 
 const MessageBox = () => {
@@ -26,9 +27,8 @@ const MessageBox = () => {
   }`}
 >
       <MessageBoxSidebar/>
-      <div>
-        something
-      </div>
+      <MessageContent/>
+     
 
       {/* // absolute close button */}
         {/* absolute cancel */}
