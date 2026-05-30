@@ -21,7 +21,7 @@ const MessageBoxSidebar = () => {
       
 
   return (
-      <aside className = "flex flex-col gap-2 border-r border-border-color p-2">
+      <aside className = "flex flex-col gap-2 border-r border-border-color p-2 overflow-auto">
       {/* Profile Section */}
       <div className ="flex flex-row gap-3 items-center  pb-2">
         <ProfilePic/>
