@@ -39,13 +39,17 @@ export const sendMessage = async (req, res, next) => {
 
     let videoUrl = null;
 
-    if (req.files?.video) {
-      const uploadVideo = await uploadOnCloudinary(req.files.video.path);
+    if (req.files?.video?.length >0) {
+      const uploadVideo = await uploadOnCloudinary(req.files.video[0].path);
 
-      videoUrl = {
-        url: uploadVideo.url,
-        public_id: uploadVideo.public_id,
-      };
+       if (uploadVideo) {
+    videoUrl = {
+      url: uploadVideo.secure_url || uploadVideo.url,
+      public_id: uploadVideo.public_id,
+    };
+  } else {
+    console.log("Video upload failed");
+  }
     }
 
     

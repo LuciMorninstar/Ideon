@@ -1,5 +1,5 @@
 import {useMutation, useQuery} from "@tanstack/react-query";
-import {getConversationMessages, getMyMessages} from "../api/messageApi";
+import {getConversationMessages, getMyMessages, sendMessage} from "../api/messageApi";
 
 
 export const useGetConversationMessages = (friendId)=>{
@@ -7,6 +7,13 @@ export const useGetConversationMessages = (friendId)=>{
         queryKey:["messages", friendId],
         queryFn:()=>getConversationMessages(friendId),
         enabled: !! friendId
+
+    })
+}
+
+export const useSendMessage = ()=>{
+    return useMutation({
+        mutationFn:(variables)=>sendMessage(variables)
 
     })
 }

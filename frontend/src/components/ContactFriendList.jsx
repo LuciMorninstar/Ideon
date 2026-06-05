@@ -9,6 +9,7 @@ const ContactFriendList = () => {
 
   const user = useAuthStore((state)=>state.user);
     const setSelectedUser = useMessageStore((state)=>state.setSelectedUser);
+    
 
   const {isPending,isError, data:friends} = useGetFriendsByUserId(user?._id);
 
@@ -32,7 +33,7 @@ const ContactFriendList = () => {
 
 
   return (
-    <div className = "flex flex-col rounded-2xl overflow-y-scroll no-scrollbar">
+    <div className = "flex flex-col rounded-2xl ">
       {
         (friends || []).map((friend)=>(
           <div onClick={(e)=>handleShowMessageClick(e,friend?._id)} key={friend?._id} className = "flex flex-row gap-4 items-center cursor-pointer ">
