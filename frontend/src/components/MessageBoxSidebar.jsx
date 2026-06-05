@@ -21,7 +21,7 @@ const MessageBoxSidebar = () => {
       
 
   return (
-      <aside className = "flex flex-col gap-2 border-r border-border-color p-2 overflow-auto">
+      <aside className = "flex flex-col gap-2 border-r border-border-color p-2  h-full overflow-hidden">
       {/* Profile Section */}
       <div className ="flex flex-row gap-3 items-center  pb-2">
         <ProfilePic/>
@@ -42,7 +42,7 @@ const MessageBoxSidebar = () => {
       </div>
 
       {/*user lists section */}
-      <div className = "flex flex-col gap-1">
+      <div className = "flex flex-col gap-1 overflow-y-scroll">
         {activeTab === "chats"? <ChatFriendsList/> : <ContactFriendList/>}
         
       </div>
