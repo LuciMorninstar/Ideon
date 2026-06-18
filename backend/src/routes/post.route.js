@@ -1,5 +1,5 @@
 import express from "express"
-import { createPost, deletePost, getAllPosts, getBookmarks, getPostsByUserId, increaseClickCount, reactToPost, toggleBookmarks, updatePost } from "../controllers/post.controller.js";
+import { createPost, deletePost, getAllPosts, getBookmarkedPosts, getBookmarks, getPostsByUserId, increaseClickCount, reactToPost, toggleBookmarks, updatePost } from "../controllers/post.controller.js";
 import { protectRoute } from "../middlewares/auth.middleware.js";
 import upload from "../middlewares/multer.middleware.js";
 
@@ -14,6 +14,7 @@ router.patch("/:id",protectRoute,updatePost);
 router.patch("/incClickCount/:id", protectRoute, increaseClickCount );
 router.patch("/react/:id", protectRoute, reactToPost);
 router.patch("/toggleBookmarks/:postId", protectRoute, toggleBookmarks);
+router.get("/bookmarkedPosts", protectRoute, getBookmarkedPosts);
 
 
 

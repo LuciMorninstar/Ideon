@@ -6,6 +6,7 @@ import postRoutes from "./routes/post.route.js"
 import userRoutes from "./routes/user.route.js"
 import savedPostsRoutes from "./routes/savedPosts.route.js"
 import messageRoutes from "./routes/message.route.js"
+import storyRoutes from "./routes/story.route.js"
 import { errorMiddleware } from "./middlewares/errror.middleware.js";
 import cookieParser from "cookie-parser"
 import cors from "cors"
@@ -29,6 +30,7 @@ app.use("/api/post",postRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/message",messageRoutes);
 app.use("/api/savedPosts",savedPostsRoutes );
+app.use("/api/story",storyRoutes );
 
 
 app.use(errorMiddleware);

@@ -34,7 +34,6 @@ const MyFriends = ({id}) => {
         setLoadingId(null);
         queryClient.invalidateQueries({queryKey:['allMyFriends']});
 
-
       },    
       onError: (err) => {
         console.log(err);

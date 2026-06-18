@@ -30,3 +30,8 @@ export const reactToPost = async({postId, reactionType})=>{
 //     const response = await axios.get(`/post/bookmarks`)
 // }
 
+export const getBookmarkedPosts = async()=>{
+    const response = await axios.get("/post/bookmarkedPosts");
+    return response.data.bookmarkedPosts;
+}
+

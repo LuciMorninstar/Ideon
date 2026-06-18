@@ -426,6 +426,17 @@ export const getBookmarks = async(req,res,next)=>{
     }
 
     const bookmarks = user.bookmarks;
+
+    if(!bookmarks || bookmarks.length === 0){
+      const err = new Error("No bookmarks found!");
+      err.statusCode = 404;
+      return next(err);
+    }
+
+    return res.status(200).json({
+      success:true,
+      bookmarks
+    })
     
   } catch (error) {
     next(error);
@@ -435,38 +446,38 @@ export const getBookmarks = async(req,res,next)=>{
 
 }
 
-// export const getBookmarkedPosts = async (req, res, next) => {
-//   const myId = req.user?._id;
+export const getBookmarkedPosts = async (req, res, next) => {
+  const myId = req.user?._id;
 
-//   try 
-//   {
-//      const currentUser = await User.findById(myId).populate({
-//     path: "bookmarks",
-//     populate: {
-//       path: "owner",
-//       select: "name profilePic",
-//     },
-//   });
+  try 
+  {
+     const currentUser = await User.findById(myId).populate({
+    path: "bookmarks",
+    populate: {
+      path: "owner",
+      select: "name profilePic",
+    },
+  });
 
-//   const bookmarkedPosts = currentUser.bookmarks.map((post)=>({
-//     ...post.toObject(),
-//     isBookmarked:true,
-//     reactionsCount:post.reactions.length,
-//     commentsCount:post.comments.length,
-//     sharesCount:post.shares.length,
-//     isEdited:post.isEdited,
+  const bookmarkedPosts = currentUser.bookmarks.map((post)=>({
+    ...post.toObject(),
+    isBookmarked:true,
+    reactionsCount:post.reactions.length,
+    commentsCount:post.comments.length,
+    sharesCount:post.shares.length,
+    isEdited:post.isEdited,
 
-//   }))
+  }))
 
-//   return res.status(200).json({
-//     success:true,
-//     bookmarkedPosts
-//   })
+  return res.status(200).json({
+    success:true,
+    bookmarkedPosts
+  })
     
-//   } catch (error) {
-//     console.log(`Error in the getBookmarkedPosts controller: ${error.message}`);
-//     next(error);
+  } catch (error) {
+    console.log(`Error in the getBookmarkedPosts controller: ${error.message}`);
+    next(error);
     
-//   }
+  }
  
-// };
+};

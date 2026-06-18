@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getAllPosts,createPost, toggleBookmarks, getPostsByUserId, reactToPost } from "../api/postApi";
+import { getAllPosts,createPost, toggleBookmarks, getPostsByUserId, reactToPost, getBookmarkedPosts } from "../api/postApi";
 import { useQueryClient } from "@tanstack/react-query";
+
 
 export const useGetAllPosts = ()=>{
     return useQuery({
@@ -41,4 +42,12 @@ export const useReactToPost = ()=>{
     
     })
 
+}
+
+
+export const useGetBookmarkedPosts = ()=>{
+    return useQuery({
+        queryKey:["bookmarkedPosts"],
+        queryFn:()=> getBookmarkedPosts
+    })
 }
