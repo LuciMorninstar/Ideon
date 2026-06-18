@@ -51,15 +51,28 @@ export const addToSavedPosts = async(req,res,next)=>{
 
 export const getAllMySavedPosts = async(req,res,next)=>{
     const myId = req.user?._id;
+    
+
+  
 
     try {
        checkMyId(myId);
 
-        const mySavedPosts = await savedPosts.find({user:myId});
+        const mySavedPosts = await savedPosts.find({user:myId}).populate({
+            path:"post",
+            select:"text images video reactions comments owner type category createdAt",
+            populate:[
+                {path:"owner", select:"name profilePic"}
+            ]
+        });
+
         if(!mySavedPosts || mySavedPosts.length === 0){
-            const err = new Error("No saved Posts found!");
-            err.statusCode = 404;
-            return next(err);
+            return res.status(200).json({
+                success:true,
+                message:"No saved Posts Found!",
+                mySavedPosts:[]
+            })
+            
         }
 
         return res.status(200).json({

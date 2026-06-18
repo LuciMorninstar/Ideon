@@ -3,11 +3,15 @@ import { Outlet } from 'react-router'
 import Sidebar from '../components/Sidebar'
 
 import Friends from '../components/Friends'
+import ShowStory from '../components/ShowStory'
 
 
 const MainLayout = () => {
   return (
     <main className = "h-screen grid grid-cols-1 sm:grid-cols-[1fr_5fr] lg:grid-cols-[1fr_2fr_1fr] max-w-7xl mx-auto overflow-hidden">
+
+      <ShowStory/>
+      
       <section className='sticky top-0 hidden sm:block'>
              <Sidebar/>
       </section>

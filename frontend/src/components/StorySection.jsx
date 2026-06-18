@@ -12,6 +12,7 @@ import { Pagination,Autoplay,Navigation  } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import StorySlide from './StorySlide';
 import {useRef} from "react"
+import {useShowAllStories} from "../hooks/useStory.js";
 
 import { FaChevronLeft, } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa";
@@ -19,8 +20,13 @@ import { FaChevronRight } from "react-icons/fa";
 
 
 
+
 const StorySection = () => {
 
+
+  const {isPending:storiesPending, data:stories, error} = useShowAllStories();
+
+  console.log(stories);
 
   const scrollRef = useRef(null);
 
@@ -33,6 +39,8 @@ const StorySection = () => {
     })
   }
 
+
+
   const scrollRight = ()=>{
       if(!scrollRef.current) return;
     scrollRef.current?.scrollBy({
@@ -41,49 +49,8 @@ const StorySection = () => {
     })
   }
 
-  const loading = false;
-  const stories = [
-    {
-      name:"Story Bibek",
-      image:moon
-    },
-    {
-      name:"Story 1",
-      image:profilePic
-    },
-    {
-      name:"Story 1",
-      image:japan
-    },
-    {
-      name:"Story 1",
-      image:city
-    },
-    {
-      name:"Story 1",
-      image:profilePic
-    },
-    {
-      name:"Story 1",
-      image:moon
-    },
-    {
-      name:"Story 1",
-      image:city
-    },
-    {
-      name:"Story 1",
-      image:japan
-    },
-    {
-      name:"Story 1",
-      image:profilePic
-    },
-    {
-      name:"Story 1",
-      image:city
-    },
-  ]
+  // const loading = false;
+
   return (
 
     <section className = "relative w-full  py-5 border-b border-border-color">
@@ -100,11 +67,13 @@ const StorySection = () => {
       </button>
         
 
+    
 
         {
-          stories.map((item, i)=>(
 
-            <StorySlide loading = {loading} item={item}/>
+          (stories || []).map((story)=>(
+
+            <StorySlide  storiesPending={storiesPending} story={story}/>
           
           ))
         }

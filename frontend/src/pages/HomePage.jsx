@@ -36,9 +36,6 @@ const HomePage = () => {
 
   const toggleMessageOpen = useMessageStore((state)=>state.toggleMessageOpen);
 
-  
-
- 
 
   return ( 
     <>

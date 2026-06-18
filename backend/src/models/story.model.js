@@ -1,4 +1,4 @@
-
+import mongoose from "mongoose";
 
 const storySchema = new mongoose.Schema({
 
@@ -9,6 +9,7 @@ const storySchema = new mongoose.Schema({
     },
     title:{
         type:String,
+        required:true
     },
     video:{
         url:{type:String, default:null},
@@ -27,7 +28,7 @@ const storySchema = new mongoose.Schema({
         enum:["public","private", "friends"],
         default:"public"
     },
-      reactions:[
+    reactions:[
        
                {
                   user: {
@@ -42,4 +43,7 @@ const storySchema = new mongoose.Schema({
            }
            ],
 
-},{timestamps:true})
+},{timestamps:true});
+
+const Story = mongoose.model("Story", storySchema);
+export default Story;

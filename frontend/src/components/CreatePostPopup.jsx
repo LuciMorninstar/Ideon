@@ -100,12 +100,6 @@
       videoRef.current.click();
     };
 
-
-
-  
-
-
-
     return (
       <section
         id="popup"
@@ -140,7 +134,7 @@
           <div className = "flex flex-col gap-4">
 
           {images?.length === 1 && (
-            <div className="bg-green-500 max-w-sm h-64 rounded-2xl overflow-hidden">
+            <div className=" max-w-sm h-64 rounded-2xl overflow-hidden">
               <img
                 src={URL.createObjectURL(images[0])}
                 alt="image"

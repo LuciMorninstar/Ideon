@@ -28,7 +28,6 @@ const MessageBoxSidebar = () => {
         <span>
           <h6>{user?.name}</h6>
           <p className = "text-sm">{user?.status || "You"}</p>
-          
         </span>
       </div>
 
